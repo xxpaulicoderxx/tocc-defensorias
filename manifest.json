@@ -1,0 +1,25 @@
+{
+  "name": "Defensoría ante TOCC",
+  "short_name": "Def. TOCC",
+  "description": "Consulta de Defensoría por TOCC - MPD Buenos Aires. Vigencia agosto 2025 a agosto 2026.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f4f6f8",
+  "theme_color": "#00acc1",
+  "orientation": "portrait",
+  "lang": "es",
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
