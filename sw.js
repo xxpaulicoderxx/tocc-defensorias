@@ -1,4 +1,4 @@
-const CACHE_NAME = 'tocc-def-v1';
+const CACHE_NAME = 'tocc-def-v2';
 const ASSETS = [
   './',
   './index.html',
