@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Defensoría TOCC</title>
+
+  <!-- PWA Meta Tags -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Defensoría TOCC">
+  <meta name="theme-color" content="#00acc1">
+  <meta name="description" content="Consulta de Defensoría por TOCC - MPD Buenos Aires">
+
+  <!-- PWA Icons for iOS -->
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="icons/icon-192.png">
+
+  <!-- Manifest -->
+  <link rel="manifest" href="manifest.json">
+
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --celeste: #e0f7fa;
+      --celeste-oscuro: #00acc1;
+      --celeste-hover: #007c91;
+      --amarillo: #fffde7;
+      --amarillo-borde: #f9a825;
+      --blanco: #ffffff;
+      --gris: #f4f6f8;
+      --texto: #1a2a3a;
+      --subtexto: #546e7a;
+      --sombra: rgba(0, 172, 193, 0.15);
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background-color: var(--gris);
+      margin: 0;
+      padding: 1.5rem 1rem;
+      color: var(--texto);
+      min-height: 100vh;
+    }
+
+    .contenedor {
+      background-color: var(--blanco);
+      border-radius: 16px;
+      padding: 2rem 1.5rem;
+      max-width: 520px;
+      margin: auto;
+      box-shadow: 0 6px 24px var(--sombra);
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .header h2 {
+      color: var(--celeste-oscuro);
+      font-size: 1.4rem;
+      font-weight: 800;
+      margin: 0 0 0.4rem 0;
+      line-height: 1.3;
+    }
+
+    .badge {
+      display: inline-block;
+      background-color: var(--celeste);
+      color: var(--celeste-oscuro);
+      border-radius: 20px;
+      padding: 0.25rem 0.85rem;
+      font-size: 0.78rem;
+      font-weight: 700;
+      margin-top: 0.4rem;
+      letter-spacing: 0.03em;
+    }
+
+    /* Selector de período */
+    .periodo-selector {
+      display: flex;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 2px solid var(--celeste-oscuro);
+      margin-bottom: 1.5rem;
+    }
+
+    .periodo-btn {
+      flex: 1;
+      padding: 0.65rem 0.5rem;
+      font-size: 0.78rem;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      background-color: var(--blanco);
+      color: var(--celeste-oscuro);
+      transition: background-color 0.2s, color 0.2s;
+      line-height: 1.3;
+      text-align: center;
+      width: auto;
+      margin: 0;
+      border-radius: 0;
+      letter-spacing: 0;
+    }
+
+    .periodo-btn:not(:last-child) {
+      border-right: 1px solid var(--celeste-oscuro);
+    }
+
+    .periodo-btn.activo {
+      background-color: var(--celeste-oscuro);
+      color: var(--blanco);
+    }
+
+    .periodo-vigente-label {
+      text-align: center;
+      font-size: 0.78rem;
+      color: var(--subtexto);
+      font-weight: 600;
+      margin-bottom: 1.25rem;
+      margin-top: -0.75rem;
+    }
+
+    .periodo-vigente-label span {
+      background-color: #e8f5e9;
+      color: #2e7d32;
+      border-radius: 10px;
+      padding: 0.15rem 0.6rem;
+      font-size: 0.75rem;
+    }
+
+    label {
+      font-weight: 700;
+      display: block;
+      margin-top: 1.25rem;
+      margin-bottom: 0.4rem;
+      font-size: 0.9rem;
+      color: var(--subtexto);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    input[type="number"] {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      font-size: 1.1rem;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 600;
+      border: 2px solid #e0e0e0;
+      border-radius: 10px;
+      outline: none;
+      transition: border-color 0.2s ease;
+      color: var(--texto);
+      -webkit-appearance: none;
+      appearance: none;
+    }
+
+    input[type="number"]:focus {
+      border-color: var(--celeste-oscuro);
+    }
+
+    .checkbox-wrapper {
+      margin-top: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      cursor: pointer;
+    }
+
+    input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      accent-color: var(--celeste-oscuro);
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .checkbox-wrapper span {
+      font-size: 0.95rem;
+      color: var(--subtexto);
+      font-weight: 600;
+    }
+
+    button#btnConsultar {
+      background-color: var(--celeste-oscuro);
+      color: var(--blanco);
+      border: none;
+      padding: 0.9rem;
+      font-size: 1rem;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800;
+      border-radius: 10px;
+      margin-top: 1.75rem;
+      cursor: pointer;
+      width: 100%;
+      letter-spacing: 0.03em;
+      transition: background-color 0.2s ease, transform 0.1s ease;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+
+    button#btnConsultar:hover { background-color: var(--celeste-hover); }
+    button#btnConsultar:active { transform: scale(0.98); background-color: var(--celeste-hover); }
+
+    #resultado {
+      margin-top: 1.75rem;
+      font-weight: 700;
+      background-color: var(--amarillo);
+      border-left: 4px solid var(--amarillo-borde);
+      padding: 1.25rem;
+      border-radius: 10px;
+      color: var(--texto);
+      text-align: center;
+      white-space: pre-wrap;
+      line-height: 1.6;
+      display: none;
+      font-size: 1rem;
+    }
+
+    #resultado.visible { display: block; }
+
+    #resultado .defNum {
+      font-size: 1.5rem;
+      color: var(--celeste-oscuro);
+      display: block;
+      margin: 0.4rem 0;
+    }
+
+    #resultado .guia-link {
+      display: inline-block;
+      margin-top: 0.75rem;
+      font-size: 0.88rem;
+      color: #006699;
+      font-weight: 700;
+      text-decoration: none;
+      border-bottom: 1px dashed #006699;
+    }
+
+    #resultado .guia-link:hover { color: #004466; }
+    #resultado .error { color: #c62828; }
+
+    .instalar-tip {
+      margin-top: 1.5rem;
+      padding: 0.85rem 1rem;
+      background-color: #f1f8ff;
+      border-radius: 10px;
+      font-size: 0.82rem;
+      color: var(--subtexto);
+      text-align: center;
+      line-height: 1.5;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="contenedor">
+    <div class="header">
+      <h2>Consulta de Defensoría ante TOCC</h2>
+      <span class="badge">MPD · Buenos Aires</span>
+    </div>
+
+    <!-- Selector de período -->
+    <div class="periodo-selector">
+      <button class="periodo-btn activo" id="btn-periodo-2" type="button" data-periodo="2">
+        Sep 2026<br>Ago 2027
+      </button>
+      <button class="periodo-btn" id="btn-periodo-1" type="button" data-periodo="1">
+        Sep 2025<br>Ago 2026
+      </button>
+    </div>
+    <div class="periodo-vigente-label">
+      <span id="label-vigente">✅ Período vigente</span>
+    </div>
+
+    <label for="tocc">TOCC sorteado</label>
+    <input type="number" id="tocc" inputmode="numeric" pattern="[0-9]*" placeholder="Ej: 7" />
+
+    <label for="causa">Número interno asignado</label>
+    <input type="number" id="causa" inputmode="numeric" pattern="[0-9]*" placeholder="Ej: 12345" />
+
+    <div class="checkbox-wrapper" id="checkboxWrapper">
+      <input type="checkbox" id="sinCausa" />
+      <span>No conozco el número interno</span>
+    </div>
+
+    <button id="btnConsultar" type="button">Consultar</button>
+
+    <div id="resultado"></div>
+
+    <div class="instalar-tip" id="instalarTip">
+      📲 En iPhone: tocá <strong>Compartir → Agregar a pantalla de inicio</strong><br>
+      🤖 En Android: tocá <strong>Menú → Agregar a pantalla de inicio</strong>
+    </div>
+  </div>
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function() {
+        navigator.serviceWorker.register('sw.js').catch(function(err) {
+          console.log('SW error:', err);
+        });
+      });
+    }
+
+    if (!window.matchMedia('(display-mode: standalone)').matches && !window.navigator.standalone) {
+      document.getElementById('instalarTip').style.display = 'block';
+    }
+
+    // ── DATOS POR PERÍODO ──────────────────────────────────────────────────────
+
+    // Período 1: 1 sep 2025 – 31 ago 2026
+    // Clave: TOCC → { integro, par, impar }  (valor = N° de Defensoría)
+    var periodos = {
+      1: {
+        label: 'Sep 2025 – Ago 2026',
+        defensorias: {
+          7:  { integro: 1 },
+          28: { par: 2,     impar: 13 },
+          30: { integro: 2 },
+          1:  { par: 2,     impar: 9  },
+          3:  { integro: 3 },
+          16: { par: 8,     impar: 3  },
+          4:  { integro: 4 },
+          27: { par: 14,    impar: 4  },
+          13: { integro: 5 },
+          18: { par: 5,     impar: 10 },
+          24: { integro: 6 },
+          22: { par: 'ULM', impar: 6  },
+          19: { integro: 7 },
+          8:  { par: 7,     impar: 18 },
+          11: { integro: 8 },
+          21: { integro: 9 },
+          15: { integro: 10 },
+          20: { integro: 11 },
+          9:  { par: 20,    impar: 11 },
+          10: { integro: 12 },
+          5:  { par: 17,    impar: 12 },
+          29: { integro: 13 },
+          2:  { integro: 14 },
+          14: { integro: 15 },
+          25: { par: 15,    impar: 'ULM' },
+          17: { integro: 17 },
+          12: { integro: 18 },
+          26: { integro: 20 }
+        }
+      },
+
+      // Período 2: 1 sep 2026 – 31 ago 2027
+      // Fuente: ANEXO oficial. Clave: TOCC → { integro, par, impar }
+      // Def 1  → TOCC 10 (íntegro), TOCC 5 (impares)
+      // Def 2  → TOCC 3 (íntegro),  TOCC 16 (impares)
+      // Def 3  → TOCC 30 (íntegro), TOCC 1 (pares)
+      // Def 4  → TOCC 29 (íntegro), TOCC 28 (impares)
+      // Def 5  → TOCC 24 (íntegro), TOCC 22 (impares)
+      // Def 6  → TOCC 13 (íntegro), TOCC 18 (pares)
+      // Def 7  → TOCC 4 (íntegro),  TOCC 27 (impares)
+      // Def 8  → TOCC 11 (íntegro), TOCC 16 (pares)
+      // Def 9  → TOCC 12 (íntegro), TOCC 8 (impares)
+      // Def 10 → TOCC 21 (íntegro), TOCC 1 (impares)
+      // Def 11 → TOCC 20 (íntegro), TOCC 25 (impares)
+      // Def 12 → TOCC 17 (íntegro), TOCC 5 (pares)
+      // Def 13 → TOCC 14 (íntegro), TOCC 25 (pares)
+      // Def 14 → TOCC 2 (íntegro),  TOCC 27 (pares)
+      // Def 15 → TOCC 19 (íntegro), TOCC 22 (pares)
+      // Def 17 → TOCC 15 (íntegro), TOCC 18 (impares)
+      // Def 18 → TOCC 7 (íntegro),  TOCC 28 (pares)
+      // Def 20 → TOCC 26 (íntegro), TOCC 9 (pares)
+      // ULM    → TOCC 8 (pares), TOCC 9 (impares)
+      2: {
+        label: 'Sep 2026 – Ago 2027',
+        defensorias: {
+          10: { integro: 1  },
+          5:  { par: 12,    impar: 1  },
+          3:  { integro: 2  },
+          16: { par: 8,     impar: 2  },
+          30: { integro: 3  },
+          1:  { par: 3,     impar: 10 },
+          29: { integro: 4  },
+          28: { par: 18,    impar: 4  },
+          24: { integro: 5  },
+          22: { par: 15,    impar: 5  },
+          13: { integro: 6  },
+          18: { par: 6,     impar: 17 },
+          4:  { integro: 7  },
+          27: { par: 14,    impar: 7  },
+          11: { integro: 8  },
+          21: { integro: 10 },
+          12: { integro: 9  },
+          8:  { par: 'ULM', impar: 9  },
+          20: { integro: 11 },
+          25: { par: 13,    impar: 11 },
+          17: { integro: 12 },
+          14: { integro: 13 },
+          2:  { integro: 14 },
+          19: { integro: 15 },
+          15: { integro: 17 },
+          7:  { integro: 18 },
+          26: { integro: 20 },
+          9:  { par: 20,    impar: 'ULM' }
+        }
+      }
+    };
+
+    // ── ESTADO ─────────────────────────────────────────────────────────────────
+    var periodoActual = 2; // predeterminado: el más reciente
+
+    // ── LÓGICA PRINCIPAL ───────────────────────────────────────────────────────
+    function consultarDefensoria() {
+      var toccInput   = document.getElementById('tocc');
+      var causaInput  = document.getElementById('causa');
+      var sinCausaCheck = document.getElementById('sinCausa');
+      var resultadoDiv  = document.getElementById('resultado');
+
+      var tocc     = parseInt(toccInput.value, 10);
+      var causa    = parseInt(causaInput.value, 10);
+      var sinCausa = sinCausaCheck.checked;
+
+      resultadoDiv.className = '';
+      resultadoDiv.innerHTML = '';
+
+      if (isNaN(tocc) || toccInput.value === '') {
+        resultadoDiv.innerHTML = '<span class="error">⚠️ Ingresá el número de TOCC correctamente.</span>';
+        resultadoDiv.className = 'visible';
+        return;
+      }
+
+      var data = periodos[periodoActual].defensorias[tocc];
+      if (!data) {
+        resultadoDiv.innerHTML = '<span class="error">⚠️ Ese TOCC no tiene defensoría asignada en el cuadro del período seleccionado.</span>';
+        resultadoDiv.className = 'visible';
+        return;
+      }
+
+      var mensaje = '';
+
+      if (sinCausa) {
+        if (data.par !== undefined && data.impar !== undefined) {
+          mensaje =
+            'Como no conocés el número interno:\n' +
+            '📋 Si es PAR → Defensoría N° <strong>' + data.par + '</strong>\n' +
+            '📋 Si es IMPAR → Defensoría N° <strong>' + data.impar + '</strong>';
+        } else if (data.integro !== undefined) {
+          mensaje = 'Corresponde la intervención de la\n<span class="defNum">Defensoría ante TOCC N° <strong>' + data.integro + '</strong></span>';
+        } else {
+          mensaje = '<span class="error">No se puede determinar sin saber si el número es par o impar.</span>';
+        }
+      } else {
+        if (isNaN(causa) || causaInput.value === '') {
+          resultadoDiv.innerHTML = '<span class="error">⚠️ Ingresá el número interno o marcá que no lo conocés.</span>';
+          resultadoDiv.className = 'visible';
+          return;
+        }
+        var paridad = (causa % 2 === 0) ? 'par' : 'impar';
+        var defNum  = data.integro !== undefined ? data.integro : data[paridad];
+        if (defNum !== undefined) {
+          mensaje = 'Corresponde la intervención de la\n<span class="defNum">Defensoría ante TOCC N° <strong>' + defNum + '</strong></span>';
+        } else {
+          mensaje = '<span class="error">No hay defensoría asignada para esa combinación.</span>';
+        }
+      }
+
+      mensaje += '\n\n<a href="https://www.mpd.gov.ar/index.php/guia-de-defensorias-mpd" target="_blank" rel="noopener" class="guia-link">📞 Ver teléfonos en la guía del MPD</a>';
+
+      resultadoDiv.innerHTML = mensaje;
+      resultadoDiv.className = 'visible';
+    }
+
+    // ── INICIALIZACIÓN ─────────────────────────────────────────────────────────
+    document.addEventListener('DOMContentLoaded', function() {
+
+      // Botones de período
+      document.querySelectorAll('.periodo-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          periodoActual = parseInt(this.getAttribute('data-periodo'), 10);
+
+          document.querySelectorAll('.periodo-btn').forEach(function(b) {
+            b.classList.remove('activo');
+          });
+          this.classList.add('activo');
+
+          // Label "vigente" solo en período 2
+          var lv = document.getElementById('label-vigente');
+          if (periodoActual === 2) {
+            lv.innerHTML = '✅ Período vigente';
+            lv.style.color = '';
+          } else {
+            lv.innerHTML = '🗂 Período anterior';
+            lv.style.color = '#b45309';
+          }
+
+          // Limpiar resultado al cambiar período
+          var r = document.getElementById('resultado');
+          r.className = '';
+          r.innerHTML = '';
+        });
+      });
+
+      // Botón consultar
+      document.getElementById('btnConsultar').addEventListener('click', consultarDefensoria);
+
+      // Enter en los inputs
+      document.getElementById('tocc').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') consultarDefensoria();
+      });
+      document.getElementById('causa').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') consultarDefensoria();
+      });
+
+      // Toggle campo causa
+      var sinCausaCheck = document.getElementById('sinCausa');
+      var causaInput    = document.getElementById('causa');
+      sinCausaCheck.addEventListener('change', function() {
+        causaInput.disabled    = sinCausaCheck.checked;
+        causaInput.style.opacity = sinCausaCheck.checked ? '0.4' : '1';
+      });
+    });
+  </script>
+
+</body>
+</html>
